@@ -6,6 +6,7 @@ import com.alibaba.csp.sentinel.Tracer;
 import com.alibaba.csp.sentinel.context.ContextUtil;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.rose.data.dto.TestDto;
+import com.rose.parent.common.data.response.ResponseResultCode;
 import com.rose.parent.common.data.response.StringResponse;
 import com.rose.parent.common.exception.SentinelCaputeException;
 import com.rose.parent.common.util.JsonUtil;
@@ -45,15 +46,15 @@ public class TestControler {
         Entry entry = null;
         try {
             // 定义sentinel 资源标志名称
-            String sentinelFlagName = "user-sentinelTest1";
+            String sentinelFlagName = "testSentinel";
             ContextUtil.enter(sentinelFlagName);
             entry = SphU.entry(sentinelFlagName);
 
             // 被保护的业务逻辑
 
-            return new StringResponse("success");
+//            return new StringResponse("success");
             //需要降级处理时，抛此异常
-//            throw new SentinelCaputeException(ResponseResultCode.OPERT_ERROR);
+            throw new SentinelCaputeException(ResponseResultCode.OPERT_ERROR);
         } catch (BlockException e) {
             // 如果被保护的资源被限流或者降级了，就会抛BlockException
             log.error("接口-/user/test/b4，发生了限流，或者降级了，原因：{}", e);
