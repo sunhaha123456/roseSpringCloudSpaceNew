@@ -14,19 +14,35 @@
     <script th:inline="javascript">
         function a1() {
             var res = ajaxSynchGet("rose-content-server-a/user/test/a1", null);
-            $("#a1").html(res.data.response);
+            if (res.code == 200) {
+                $("#a1").html(res.data.response);
+            } else {
+                $("#a1").html(res.msg);
+            }
         }
         function a2() {
             var res = ajaxSynchGet("rose-content-server-a/user/test/a2", {"param1": 111, "param2": "222"});
-            $("#a2").html(res.data.response);
+            if (res.code == 200) {
+                $("#a2").html(res.data.response);
+            } else {
+                $("#a2").html(res.msg);
+            }
         }
         function a3() {
             var res = ajaxSynchGet("rose-content-server-a/user/test/a3", null);
-            $("#a3").html(res.data.response);
+            if (res.code == 200) {
+                $("#a3").html(res.data.response);
+            } else {
+                $("#a3").html(res.msg);
+            }
         }
         function a4() {
             var res = ajaxSynchGet("rose-content-server-a/user/test/a4", null);
-            $("#a4").html(res.data.response);
+            if (res.code == 200) {
+                $("#a4").html(res.data.response);
+            } else {
+                $("#a4").html(res.msg);
+            }
         }
     </script>
 </head>

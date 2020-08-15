@@ -75,7 +75,7 @@ public class LoginServiceImpl implements LoginService {
             return false;
         }
         userRedisInfoSave(RedisKeyUtil.getRedisUserInfoKey(userId), userRedis);
-        log.info("通过token校验！userId：{}，token：{}，放行", userId, token);
+        log.info("通过token校验！userId：{}，token：{}", userId, token);
         return true;
     }
 

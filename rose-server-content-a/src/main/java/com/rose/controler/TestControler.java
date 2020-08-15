@@ -3,6 +3,9 @@ package com.rose.controler;
 import com.rose.data.dto.TestDto;
 import com.rose.parent.common.data.response.ResponseResult;
 import com.rose.parent.common.data.response.StringResponse;
+import com.rose.parent.common.exception.BusinessException;
+import com.rose.parent.common.util.JsonUtil;
+import com.rose.parent.common.util.StringUtil;
 import com.rose.parent.common.util.ValueHolder;
 import com.rose.service.TestService;
 import com.rose.service.feign.FeignTestService;
@@ -31,8 +34,8 @@ public class TestControler {
     @Autowired
     private RestTemplate restTemplate;
 
-    @Autowired
     @LoadBalanced
+    @Autowired
     private RestTemplate loadBalance;
 
     @Inject
@@ -53,8 +56,11 @@ public class TestControler {
         param.setParam1("111");
         param.setParam2("222");
         param.setParam3("333");
-        feignTestService.b2(param, valueHolder.getUserIdHolder(), valueHolder.getTokenHolder());
-        return new StringResponse("success");
+
+        String resStr = feignTestService.b2(param, valueHolder.getUserIdHolder(), valueHolder.getTokenHolder());
+        ResponseResult res = JsonUtil.jsonToObject(resStr, ResponseResult.class);
+
+        return (res != null && res.getCode() == 200 ) ? new StringResponse("success") : new StringResponse(resStr);
     }
 
     /**
@@ -68,8 +74,11 @@ public class TestControler {
         param.setParam1("111");
         param.setParam2("222");
         param.setParam3("333");
-        ResponseResult res = loadBalance.postForObject(targetUrl, param, ResponseResult.class);
-        return new StringResponse("success");
+
+        String resStr = loadBalance.postForObject(targetUrl, param, String.class);
+        ResponseResult res = JsonUtil.jsonToObject(resStr, ResponseResult.class);
+
+        return (res != null && res.getCode() == 200 ) ? new StringResponse("success") : new StringResponse(resStr);
     }
 
     /**
@@ -83,7 +92,10 @@ public class TestControler {
         param.setParam1("111");
         param.setParam2("222");
         param.setParam3("333");
-        ResponseResult res = restTemplate.postForObject(targetUrl, param, ResponseResult.class);
-        return new StringResponse("success");
+
+        String resStr = restTemplate.postForObject(targetUrl, param, String.class);
+        ResponseResult res = JsonUtil.jsonToObject(resStr, ResponseResult.class);
+
+        return (res != null && res.getCode() == 200 ) ? new StringResponse("success") : new StringResponse(resStr);
     }
 }

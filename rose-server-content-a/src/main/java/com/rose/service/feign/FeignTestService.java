@@ -26,5 +26,5 @@ public interface FeignTestService {
      * @return
      */
     @PostMapping(value = "/rose-content-server-b/user/test/b2")
-    ResponseResult b2(@RequestBody TestDto param, @RequestParam(value = "token") Long token, @RequestParam(value = "userId") String userId);
+    String b2(@RequestBody TestDto param, @RequestParam(value = "userId") Long userId, @RequestParam(value = "token") String token);
 }
