@@ -1,0 +1,74 @@
+1、nacos 用作服务发现：
+    当某个服务kill掉，需要5秒左右的时间，nacos才会感知到，其他服务也才会感知到
+    并且，默认情况下，robbion不支持nacos的上下线、权重操作
+    目前项目中使用的优雅停机方案：
+        a、重写了robbin路由规则，使其支持nacos上下线、权重操作，也就是其会自动选取处于上线状态，且权重较大的实例
+        b、kill前，到nacos管控台，手动下线操作
+（2）关于nacos领域模型：Namespace、Group、Service、Cluster、Instance
+2、ribbon 路由规则：
+（1）默认下是轮训
+（2）当配置成根据权重路由后，权重值越大，被选中的概率越大
+     注意：权重被配置成0，将会永远不会被调用到
+3、restTemplate
+    超时时间：
+        默认永不超时，或者根据对方的超时设置
+        需自己手动设置链接超时时间 与 读取超时时间
+    重试机制：
+        失败后不进行重试
+4、feign
+    超时时间：
+        默认超时时间是2秒
+        已手动设置超时时间为15秒
+    重试机制：
+        失败后不进行重试
+    get方式传对象：
+        需要使用 @SpringQueryMap 注解
+    日志级别：
+        NONE，BASIC，HEADERS，FULL
+    日志java代码方式设置全文日志级别：
+@EnableFeignClients(basePackages = "com.rose.service.feign", defaultConfiguration = GlobalFeignConfiguration.class)
+
+public class GlobalFeignConfiguration {
+    @Bean
+    public Logger.Level level(){
+        return Logger.Level.BASIC;
+    }
+}
+5、robbion 和 feign 都是懒加载模式
+6、Sentinel
+    github地址：https://github.com/alibaba/Sentinel
+    默认情况下，数据存储规则
+        当服务停止后，sentinel控制台左侧服务列表中，服务会存储5分钟时间，
+        但是，对应的限流和降级规则，会瞬间丢失
+    在降级RT规则中，默认的最大值是4900ms
+        通过 -Dcsp.sentinel.statistic.max.rt=xxx修改
+    当代码中进行SentinelResource注解配置时，value值一定不要与请求路径一直，且控制台操作时，要对于value完全一致的行进行操作，不然会出神奇情况
+    当代码中未进行SentinelResource注解配置时，在控制台对接口进行限流设置，正常操作就行
+    拉模式的持久化：
+        因为使用FileRefreshableDataSource，所以会存在短暂的延迟
+        控制台推送来规则，会被放入内存并更新到json文件
+        而当启动的时候，或者本地文件被修改后，需要一段延迟后，服务才会读取json文件加载到内存并推送到控制台
+        举个例子，你控制台修改了规则
+        然后你本地文件就会修改
+        但，你本地是用定时任务，读取这个文件的内容传给sentinel的
+        文件修改了，但是定时任务还没执行
+        这段时间就是延迟。
+7、SpringCloudGateway
+    全局过滤器：数值越小越靠前执行
+    超时设置：当请求调用的服务A迟迟不返回结果时，超过时间后，gateway会释放此请求
+    请求body最大长度：对slb进行设置即可
+    跨域：实验后未发现
+    网关默认转发规则
+        网关是否会路由到处于健康的实例 否，通过重写ribbon路由规则实现
+    限流
+        需要关闭自动查找微服务
+        不支持低版本 redis
+        切记：要为每个微服务，配置 server.servlet.context-path，否则限流会不好做的
+
+
+
+
+
+==================================================================================
+Nginx处理
+nacos 的集群配置
