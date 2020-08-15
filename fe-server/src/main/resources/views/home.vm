@@ -44,29 +44,50 @@
                 $("#a4").html(res.msg);
             }
         }
+        function a5() {
+            ajaxSynchGet("rose-content-server-a/user/test/a5", null);
+        }
+        function b4() {
+            var res = ajaxSynchPostJson("rose-content-server-b/user/test/b4", null);
+            $("#b4").html(res.msg);
+        }
     </script>
 </head>
 <body>
-    <br/><br/><br/>
+    <span>微服务展示：</span><br />
+    <span>系统提供了，集成了ribbion的feign、集成了ribbion的restTemplate 和 没集成ribbion的restTemplate，三种对象。</span><br />
+    <span>可以通过 集成了ribbion的feign 和 集成了ribbion的restTemplate，调用微服务，</span><br />
+    <span>可以通过 没集成ribbion的restTemplate，调用指定ip。</span><br />
+    <span>ps：ribbion默认路由规则，不支持nacos的，上下架、权重，这里，已重写ribbon路由规则，使其支持了。</span><br />
+    <hr/><br />
 
-    <span>调用过程描述：请求  ->  网关  ->  a服务a1接口</span> <br/><br/>
-    <input type="button" value="a1按钮" onclick="a1()"/> <br/><br/>
-    <span id="a1"></span>
-    <br/> <hr/>
+    <span>前端server，通过网关，向后端服务rose-content-server-a 的a1接口，发送请求。</span> <br/>
+    <input type="button" value="a1按钮" onclick="a1()"/> &nbsp;&nbsp;&nbsp;&nbsp;<span id="a1"></span><br/><br/>
 
-    <span>调用过程描述：请求  ->  网关  ->  a服务a2接口  ->  以 feign结合ribbion作负载均衡 方式  ->  b服务b2接口</span> <br/><br/>
-    <input type="button" value="a2按钮" onclick="a2()"/> <br/><br/>
-    <span id="a2"></span>
-    <br/> <hr/>
+    <span>前端server，通过网关，向后端服务rose-content-server-a 的a2接口，发送请求。</span> <br/>
+    <span>a2接口，接受到请求，会通过集成了ribbion的feign，调用 rose-content-server-b服务 b2接口。</span> <br/>
+    <input type="button" value="a2按钮" onclick="a2()"/> &nbsp;&nbsp;&nbsp;&nbsp;<span id="a2"></span><br/><br/>
 
-    <span>调用过程描述：请求  ->  网关  ->  a服务a3接口  ->  以 restTemplate结合ribbion负载均衡 方式  ->  b服务b2接口</span> <br/><br/>
-    <input type="button" value="a3按钮" onclick="a3()"/> <br/><br/>
-    <span id="a3"></span>
-    <br/> <hr/>
+    <span>前端server，通过网关，向后端服务rose-content-server-a 的a3接口，发送请求。</span> <br/>
+    <span>a3接口，接受到请求，会通过集成了ribbion的restTemplate，调用 rose-content-server-b服务 b2接口。</span> <br/>
+    <span>ps：有些时候，是无法通过feign，进行服务调用，所以，需要实现restTemplate这种方式的。</span> <br/>
+    <input type="button" value="a3按钮" onclick="a3()"/> &nbsp;&nbsp;&nbsp;&nbsp;<span id="a3"></span><br/><br/>
 
-    <span>调用过程描述：请求  ->  网关  ->  a服务a4接口  ->  以 restTemplate非载均衡直连方式  ->  b服务b2接口</span> <br/><br/>
-    <input type="button" value="a4按钮" onclick="a4()"/> <br/><br/>
-    <span id="a4"></span>
-    <br/> <hr/>
+    <span>前端server，通过网关，向后端服务rose-content-server-a 的a4接口，发送请求。</span> <br/>
+    <span>a4接口，接受到请求，会通过未集成ribbion的restTemplate，调用 rose-content-server-b服务指定ip实例的 b2接口。</span> <br/>
+    <input type="button" value="a4按钮" onclick="a4()"/> &nbsp;&nbsp;&nbsp;&nbsp;<span id="a4"></span><br/><br />
+
+    <hr/>
+    <span>流控展示：</span><br />
+    <span>1、gateway redis令牌桶</span><br />
+    <span>2、sentinel流控展示：限流、降级 和 持久化。</span><br />
+    <hr/><br/>
+
+    <span>限流展示：对 服务rose-content-server-a 的a5接口，进行限流。</span> <br/>
+    <input type="button" value="a5按钮" onclick="a5()"/> &nbsp;&nbsp;&nbsp;&nbsp;<span id="a5"></span><br/><br/>
+
+    <span>降级展示：对 服务rose-content-server-b 的b4接口，进行降级。</span> <br/>
+    <span>ps：模拟b4接口抛操作失败异常，在错误发生次数或占比，达到设置时，进行断路保护。</span> <br/>
+    <input type="button" value="b4按钮" onclick="b4()"/> &nbsp;&nbsp;&nbsp;&nbsp;<span id="b4"></span><br/><br/>
 </body>
 </html>

@@ -98,4 +98,9 @@ public class TestControler {
 
         return (res != null && res.getCode() == 200 ) ? new StringResponse("success") : new StringResponse(resStr);
     }
+
+    @GetMapping(value = "/a5")
+    public StringResponse a5() {
+        return new StringResponse("success");
+    }
 }
