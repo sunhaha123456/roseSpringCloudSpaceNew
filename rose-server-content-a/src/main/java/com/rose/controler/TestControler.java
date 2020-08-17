@@ -26,9 +26,6 @@ import javax.inject.Inject;
 public class TestControler {
 
     @Inject
-    private TestService testService;
-
-    @Inject
     private FeignTestService feignTestService;
 
     @Autowired
@@ -48,6 +45,10 @@ public class TestControler {
 
     /**
      * 功能：以feign 方式，调用rose-content-server-b服务/user/test/b2接口
+     * 备注：系统已设置：
+     *          1、让feign使用apache httpclient做请求，而不是默认的url connection
+     *          2、设置了链接超时时间，防止请求长时间不返回
+     *          3、使用链接池提供效率，设置了最大、最小链接数
      * @return
      */
     @GetMapping(value = "/a2")
@@ -65,6 +66,7 @@ public class TestControler {
 
     /**
      * 功能：以restTemplate ribbon负载均衡 方式，调用rose-content-server-b服务user/test/b2接口
+     * 备注：系统已设置，链接超时时间，防止请求长时间不返回
      * @return
      */
     @GetMapping(value = "/a3")
