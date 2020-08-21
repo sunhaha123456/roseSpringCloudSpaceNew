@@ -3,18 +3,14 @@ package com.rose.controler;
 import com.rose.data.dto.TestDto;
 import com.rose.parent.common.data.response.ResponseResult;
 import com.rose.parent.common.data.response.StringResponse;
-import com.rose.parent.common.exception.BusinessException;
 import com.rose.parent.common.util.JsonUtil;
-import com.rose.parent.common.util.StringUtil;
 import com.rose.parent.common.util.ValueHolder;
-import com.rose.service.TestService;
 import com.rose.service.feign.FeignTestService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
