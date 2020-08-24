@@ -53,6 +53,10 @@ spring:
     port: ${redis.set.port}
     database: ${redis.set.database}
     password: ${redis.set.password}
+ribbon:
+  eager-load:
+    enabled: true
+    clients: rose-content-server-a, rose-content-server-b, rose-login-server
 logging:
 # 嫌日志太多就注掉
 #  level:
